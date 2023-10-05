@@ -242,3 +242,10 @@
     cursor: pointer;
     user-select: none;
   }
+
+  .content-form-add{
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #fff;
+    border-radius: 20px;
+  }
