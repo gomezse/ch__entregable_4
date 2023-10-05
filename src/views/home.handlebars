@@ -1,0 +1,24 @@
+<main>
+<h2 style="color:#fff">Listado Productos Estático</h2>
+    <section id="container-products" class="container-products">
+        {{#each products}}
+        <article id="product-{{id}}" class="container">
+            <div class="card">
+                <div class="imgBx">
+                    <img src="{{thumbnail}}" height="200" width="20" />
+                </div>
+                <div class="contentBx">
+                    <h2>{{title}}</h2>
+                    <div class="price">
+                        <h3>Precio: ${{price}}</h3>
+                    </div>
+                    <div class="stock">
+                        <h3>Cantidad: {{stock}}</h3>
+                    </div>                   
+                </div>
+            </div>
+        </article>
+        {{/each}}
+    </section>
+</main>
+
