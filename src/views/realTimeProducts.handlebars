@@ -1,4 +1,5 @@
 <main>
+    <h4 class="client-name" id="name"></h4>
     <section class="content-form-add">
         <h3 style="color:#fff">Dar de Alta Producto</h3>
         <form id="product-form">
@@ -16,25 +17,6 @@
 
     <h2 style="color:#fff">Listado Productos</h2>
     <section id="container-products" class="container-products">
-        {{#each products}}
-        <article id="product-{{id}}" class="container">
-            <div class="card">
-                <div class="imgBx">
-                    <img src="{{thumbnail}}" height="200" width="20" />
-                </div>
-                <div class="contentBx">
-                    <h2>{{title}}</h2>
-                    <div class="price">
-                        <h3>Precio: ${{price}}</h3>
-                    </div>
-                    <div class="stock">
-                        <h3>Cantidad: {{stock}}</h3>
-                    </div>
-                    <input type="button" onclick="eliminar({{id}})" value="Eliminar Producto"></input>
-                </div>
-            </div>
-        </article>
-        {{/each}}
     </section>
 
 </main>

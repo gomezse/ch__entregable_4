@@ -31,21 +31,50 @@ const httpServer = app.listen(PORT, () => {
 // Crear un servidor de sockets (Socket.io) y asociarlo al servidor HTTP
 const socketServer = new Server(httpServer);
 
+
 // Gestionar eventos de conexión de clientes
-socketServer.on("connection", (socket) => {
+socketServer.on("connection", async (socket) => {
   console.log(`Cliente conectado: ${socket.id}`);
 
-  // Escuchar el evento "newProduct" para crear un nuevo producto
-  socket.on("newProduct", async (product) => {
-    const newProduct = await manager.createProduct(product); 
-    // Emitir un evento "productOK" para notificar a todos los clientes
-    socketServer.emit("productOK", newProduct);
+  const productsList = await manager.getProducts();
+  socketServer.emit("listProducts", productsList);
+
+  socket.on("newUser", (user) => {
+    socket.broadcast.emit("userConnected", user);
+    socket.emit("connected");
   });
 
-  // Escuchar el evento "deleteProduct" para eliminar un producto
-  socket.on("deleteProduct", async (pid) => {
-    const deletedProduct = await manager.deleteProduct(pid);
-    // Emitir un evento "deleteOK" para notificar a todos los clientes
-    socketServer.emit("deleteOK", deletedProduct);
+  //Gestionar agregado de un nuevo producto a la tienda. 
+  socket.on("newProduct", async (product) => {
+    const newProduct = await manager.createProduct(product);
+
+    if (newProduct) {
+      //generar aviso a clientes de que se ha agregado nuvo producto.
+      socket.broadcast.emit("addedProductOthers");//avisar al resto que se agrego producto
+      socket.emit("addedProduct"); //avisar que la adicion salio "ok"
+
+      //generar el nuevo listado
+      const productsList = await manager.getProducts();
+      socketServer.emit("listProducts", productsList);
+    }
+
   });
+
+  //Gestionar eliminacion de un producto de la tienda. 
+  socket.on("deleteProduct", async (idProduct) => {
+    const deletedProduct = await manager.deleteProduct(idProduct);
+
+    if (deletedProduct) {
+      //generar aviso a clientes de que se ha eliminado un producto.
+      socket.broadcast.emit("deletedProductOthers");//avisar al resto que se elimino producto
+      socket.emit("deletedProduct"); //avisar que la eliminacion salio "ok"
+
+      //generar el nuevo listado
+      const productsList = await manager.getProducts();
+      socketServer.emit("listProducts", productsList);
+    }
+
+  });
+
+
 });
